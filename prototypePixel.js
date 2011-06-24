@@ -13,7 +13,10 @@ $(document).ready(function () {
             if (olduri !== fileuri)
                 localStorage.setItem(key, fileuri)
         }
-        var overlay = new Overlay(fileuri);
+        if (!$('#Layer').length)
+            var overlay = new Overlay(fileuri);
+        else
+            $('#Layer img')[0].attr('src', fileuri);
     });
 });
 
@@ -22,6 +25,6 @@ function Overlay(fileuri) {
     this.fileuri = fileuri;
 
     if (document.getElementById(this.id) == null) {
-        $('body').append('<div class="Layer"><img src="' + this.fileuri + '" /></div>')
+        $('body').append('<div id="'+this.id+'"><img src="' + this.fileuri + '" /></div>')
     }
 }
