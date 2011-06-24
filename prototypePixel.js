@@ -26,5 +26,6 @@ function Overlay(fileuri) {
 
     if (document.getElementById(this.id) == null) {
         $('body').append('<div id="'+this.id+'"><img src="' + this.fileuri + '" /></div>')
+        $('#Layer').draggable();
     }
 }
