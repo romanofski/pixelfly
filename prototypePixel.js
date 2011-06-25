@@ -25,7 +25,10 @@ function Overlay(fileuri) {
     this.fileuri = fileuri;
 
     if (document.getElementById(this.id) == null) {
-        $('body').append('<div id="'+this.id+'"><img src="' + this.fileuri + '" /></div>')
+        $('body').append('<div id="'+this.id+'"><input value="0" style="position: relative; top: 0; right: 0;" id="Xpos" /><img src="' + this.fileuri + '" /></div>')
         $('#Layer').draggable();
+        $('#Layer').bind('dragstop', function(event, ui) {
+            $('#Xpos').attr('value', ui.offset.left + ':' + ui.offset.top);
+        });
     }
 }
