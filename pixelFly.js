@@ -23,12 +23,22 @@ $(document).ready(function () {
 function Overlay(fileuri) {
     this.id = 'Layer';
     this.fileuri = fileuri;
+    this.opacity = 0.5;
 
     if (document.getElementById(this.id) == null) {
-        $('body').append('<div id="'+this.id+'"><input value="0" style="position: relative; top: 0; right: 0;" id="Xpos" /><img src="' + this.fileuri + '" /></div>')
+        $('body').append('<div id="'+this.id+'"><div id="LayerMenu" style="position: relative; top: 0; right: 0;"></div><img src="' + this.fileuri + '" /></div>')
+        $('#LayerMenu').append('<input value="0" id="Xpos" readonly="true" />')
+        $('#LayerMenu').append('<input value="' + this.opacity + '" id="Opacity" />')
         $('#Layer').draggable();
         $('#Layer').bind('dragstop', function(event, ui) {
             $('#Xpos').attr('value', ui.offset.left + ':' + ui.offset.top);
         });
+
+        $('#Opacity').change(function () {
+            this.opacity = $('#Opacity').value;
+            $('#Layer img').css('opacity', this.opacity);
+        });
+        $('#Layer img').css('opacity', this.opacity)
     }
 }
+
