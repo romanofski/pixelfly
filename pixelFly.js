@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('body').append('<input id="fileuri" name="fileuri" value="'+olduri+'" />');
     var overlay = document.getElementById('Layer');
     if (overlay == null && olduri)
-        var overlay = new Overlay(olduri);
+        var overlay = new createOverlay(olduri);
 
     $('#fileuri').change(function() {
         var fileuri = document.getElementById('fileuri').value
@@ -14,13 +14,13 @@ $(document).ready(function () {
                 localStorage.setItem(key, fileuri)
         }
         if (!$('#Layer').length)
-            var overlay = new Overlay(fileuri);
+            var overlay = createOverlay(fileuri);
         else
             $('#Layer img')[0].attr('src', fileuri);
     });
 });
 
-function Overlay(fileuri) {
+function createOverlay(fileuri) {
     this.id = 'Layer';
     this.fileuri = fileuri;
     this.opacity = 0.5;
