@@ -1,7 +1,7 @@
-var key = 'fileuri';
+var FILEURI = 'fileuri';
 
 $(document).ready(function () {
-    var olduri = localStorage.getItem(key) ? localStorage.getItem(key) : '';
+    var olduri = localStorage.getItem(FILEURI) ? localStorage.getItem(FILEURI) : '';
     $('body').append('<input id="fileuri" name="fileuri" value="'+olduri+'" />');
     var overlay = document.getElementById('Layer');
     if (overlay == null && olduri)
@@ -10,12 +10,12 @@ $(document).ready(function () {
     $('#fileuri').change(function() {
         var fileuri = document.getElementById('fileuri').value
         if (fileuri == '') {
-            delete localStorage[key];
+            delete localStorage[FILEURI];
             return true;
         }
         if (window['localStorage'] !== null) {
             if (olduri !== fileuri)
-                localStorage.setItem(key, fileuri)
+                localStorage.setItem(FILEURI, fileuri)
         }
         if (!$('#Layer').length)
             var overlay = createOverlay(fileuri);
