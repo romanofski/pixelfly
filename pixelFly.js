@@ -81,9 +81,16 @@ Layer.prototype.getHTMLNode = function() {
     this.img.addEventListener('mousedown',
             this.layerMouseDown,
             true);
+    this.img.addEventListener('mousemove',
+            this.layerMouseMove,
+            true);
     return this.img;
 }
+Layer.prototype.layerMouseMove = function(e) {
+    this.style.left = String(this.x + e.clientX - this.mouse_x) + 'px';
+    this.style.top = String(this.y + e.clientY - this.mouse_y) + 'px';
+}
 Layer.prototype.layerMouseDown = function(e) {
-    this.style.left = String(this.x + e.clientX) + 'px';
-    this.style.top = String(this.y + e.clientY) + 'px';
+    this.mouse_x = e.clientX;
+    this.mouse_y = e.clientY;
 }
