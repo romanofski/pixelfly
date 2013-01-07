@@ -1,53 +1,59 @@
 var FILEURI = 'fileuri';
 
-$(document).ready(function () {
-    var olduri = localStorage.getItem(FILEURI) ? localStorage.getItem(FILEURI) : '';
-    $('body').append('<input id="fileuri" name="fileuri" value="'+olduri+'" />');
-    var overlay = document.getElementById('Layer');
-    if (overlay == null && olduri)
-        var overlay = new createOverlay(olduri);
-
-    $('#fileuri').change(function() {
-        var fileuri = document.getElementById('fileuri').value
-        if (fileuri == '') {
-            delete localStorage[FILEURI];
-            return true;
-        }
-        if (window['localStorage'] !== null) {
-            if (olduri !== fileuri)
-                localStorage.setItem(FILEURI, fileuri)
-        }
-        if (!$('#Layer').length)
-            var overlay = createOverlay(fileuri);
-        else
-            $('#Layer img').attr('src', fileuri);
-    });
+window.addEventListener('load', function() {
+    var fileselector = new FileSelector();
 });
 
-function createOverlay(fileuri) {
-    var id = 'Layer';
-    var opacity = 0.5;
-
-    if (document.getElementById(id) == null) {
-        $('body').append('<div id="'+id+'"><div id="LayerMenu" style="position: relative; top: 0; right: 0;"></div><img src="' + fileuri + '" /></div>')
-        $('#LayerMenu').append('<input value="0" id="Xpos" readonly="true" />')
-        $('#LayerMenu').append('<input value="' + opacity + '" id="Opacity" />')
-        $('#LayerMenu').append('<a href="#" id="Close">Close</a>')
-        $('#Layer').draggable();
-        $('#Layer').bind('dragstop', function(event, ui) {
-            $('#Xpos').attr('value', ui.offset.left + ':' + ui.offset.top);
-        });
-
-        $('#Opacity').change(function () {
-            $('#Layer img').css('opacity', $('#Opacity').attr('value'));
-        });
-        jQuery('#Opacity').trigger(jQuery.Event('change'));
-
-        $('#Close').click(function() {
-            $('#fileuri').attr('value', '');
-            jQuery('#fileuri').trigger(jQuery.Event('change'));
-            $('#' + id).empty();
-        });
+/* FileSelector
+ */
+function FileSelector() {
+    this.fileuri = null;
+    this._input_id = 'fileuri';
+    if (!this.fileuri)
+        this.render();
+}
+FileSelector.prototype.handleChange = function(e) {
+    var file = this.files[0];
+    if (file == undefined) {
+        return false
     }
+
+    this.fileuri = window.URL.createObjectURL(file);
+    var overlay = new Overlay(this);
+    overlay.render();
+    return true;
+}
+FileSelector.prototype.render = function() {
+    var body = document.getElementsByTagName('body')[0];
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.name = this._input_id;
+    input.id = this._input_id;
+    body.appendChild(input);
+
+    input.addEventListener(
+            'change',
+            this.handleChange,
+            true);
 }
 
+
+/* Overlay
+ */
+function Overlay(selector) {
+    this.fileuri = selector.fileuri;
+    this.opacity = 0.5;
+    this.id = 'Layer';
+}
+
+Overlay.prototype.render = function Overlay_render() {
+    var body = document.getElementsByTagName('body')[0];
+    var layerMenu = document.createElement('div');
+    layerMenu.class = 'Layer';
+
+    var img = document.createElement('img');
+    img.src = this.fileuri;
+    img.style.opacity = this.opacity;
+    layerMenu.appendChild(img);
+    body.appendChild(layerMenu);
+}
