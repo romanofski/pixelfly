@@ -1,8 +1,13 @@
 var FILEURI = 'fileuri';
+var dialog = new LayerDialog();
 
 window.addEventListener('load', function() {
-    var fileselector = new FileSelector();
+    if (dialog.layers.length == 0) {
+        var fileselector = new FileSelector();
+    }
+    dialog.render();
 });
+
 
 /* FileSelector
  */
@@ -18,9 +23,9 @@ FileSelector.prototype.handleChange = function(e) {
         return false
     }
 
-    this.fileuri = window.URL.createObjectURL(file);
-    var overlay = new Layer(this);
-    overlay.render();
+    var fileuri = window.URL.createObjectURL(file);
+    var layer = new Layer(fileuri);
+    dialog.appendLayer(layer);
     return true;
 }
 FileSelector.prototype.render = function() {
@@ -38,22 +43,34 @@ FileSelector.prototype.render = function() {
 }
 
 
-/* Layer
+/* Layerdialog
  */
-function Layer(selector) {
-    this.selector = selector.fileuri;
-    this.opacity = 0.5;
-    this.id = 'Layer';
+function LayerDialog() {
+    this.layers = new Array();
+    this._domid = 'pixelfly.layerdialog';
+}
+LayerDialog.prototype.render = function() {
+    var body = document.getElementsByTagName('body')[0];
+    this._layerMenu = document.createElement('ul');
+    this._layerMenu.id = this._domid;
+    body.appendChild(this._layerMenu);
+}
+LayerDialog.prototype.appendLayer = function(layer) {
+    this.layers.push(layer);
+    this._layerMenu.appendChild(layer.getHTMLNode());
 }
 
-Layer.prototype.render = function() {
-    var body = document.getElementsByTagName('body')[0];
-    var layerMenu = document.createElement('div');
-    layerMenu.class = 'Layer';
 
+/* Layer
+ */
+function Layer(fileuri) {
+    this.opacity = 0.5;
+    this.id = 'Layer ' + fileuri;
+    this.fileuri = fileuri;
+}
+Layer.prototype.getHTMLNode = function() {
     var img = document.createElement('img');
     img.src = this.fileuri;
     img.style.opacity = this.opacity;
-    layerMenu.appendChild(img);
-    body.appendChild(layerMenu);
+    return img;
 }
