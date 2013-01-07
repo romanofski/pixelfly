@@ -19,7 +19,7 @@ FileSelector.prototype.handleChange = function(e) {
     }
 
     this.fileuri = window.URL.createObjectURL(file);
-    var overlay = new Overlay(this);
+    var overlay = new Layer(this);
     overlay.render();
     return true;
 }
@@ -38,15 +38,15 @@ FileSelector.prototype.render = function() {
 }
 
 
-/* Overlay
+/* Layer
  */
-function Overlay(selector) {
-    this.fileuri = selector.fileuri;
+function Layer(selector) {
+    this.selector = selector.fileuri;
     this.opacity = 0.5;
     this.id = 'Layer';
 }
 
-Overlay.prototype.render = function Overlay_render() {
+Layer.prototype.render = function() {
     var body = document.getElementsByTagName('body')[0];
     var layerMenu = document.createElement('div');
     layerMenu.class = 'Layer';
