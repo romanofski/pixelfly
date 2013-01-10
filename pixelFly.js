@@ -17,8 +17,12 @@ function FileSelector() {
     if (!this.fileuri)
         this.render();
 }
-FileSelector.prototype.handleChange = function(e) {
-    var file = this.files[0];
+FileSelector.prototype.handleChange = function(input, e) {
+    if (input == undefined) {
+        return false
+    }
+
+    var file = input.files[0];
     if (file == undefined) {
         return false
     }
@@ -38,7 +42,7 @@ FileSelector.prototype.render = function() {
 
     input.addEventListener(
             'change',
-            this.handleChange,
+            this.handleChange.bind(this, input),
             true);
 }
 
