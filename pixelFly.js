@@ -61,7 +61,7 @@ FileSelector.prototype.select_file = function() {
  */
 function Layer() {
     this.opacity = 0.5;
-    this.id = 'Layer 1';
+    this.id = 'layer1';
     this.x = 0;
     this.y = 0;
     this.mouse_x = 0;
@@ -71,6 +71,7 @@ function Layer() {
     this.img = null;
 
     this.html_container = document.createElement('li');
+    this.html_container.id = this.id;
 
     this.fileselector = new FileSelector(this);
     if (! this.fileselector.fileuri) {
@@ -80,12 +81,17 @@ function Layer() {
     }
 }
 Layer.prototype.update = function() {
-    this.html_container.appendChild(this.getHTMLNode());
+    var img = this.getHTMLNode();
+    if (this.html_container.lastChild instanceof HTMLImageElement) {
+        this.html_container.removeChild(this.html_container.lastChild);
+    }
+    this.html_container.appendChild(img);
 }
 /* Re-render the layer (e.g. fileuri has changed)
  */
 Layer.prototype.getHTMLNode = function() {
     this.img = document.createElement('img');
+    this.img.id = this.id + '_img';
     this.img.src = this.fileselector.fileuri;
     this.img.style.opacity = this.opacity;
     this.img.style.position = 'fixed';
